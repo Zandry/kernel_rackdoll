@@ -27,16 +27,23 @@ void die(void)
  * */
 void print_pgt(paddr_t pml, uint8_t lvl)
 {
+	// la fonction doit être récursive
 	// tant que quoi ?? alors j'appelle print_pgt(paddr_t pml, niveau)
-	printk("Test affichage %p", pml);
+
+	printk("Test affichage addr %d niveau %d\n", pml, lvl); 
+	/*while (pml < store_cr2())
+	{
+		print_pgt(pml, lvl);
+		pml +=1000;
+	}*/
 }
 
 __attribute__((noreturn))
+
 void main_multiboot2(void *mb2)
 {
 	clear();                                     /* clear the VGA screen */
-	printk(7,"Rackdoll OS\n-----------\n\n");                 /* greetings */
-
+	printk("Rackdoll OS\n-----------\n\n");                 /* greetings */
 	setup_interrupts();                           /* setup a 64-bits IDT */
 	setup_tss();                                  /* setup a 64-bits TSS */
 	interrupt_vector[INT_PF] = pgfault;      /* setup page fault handler */
@@ -47,11 +54,12 @@ void main_multiboot2(void *mb2)
 
 	/*** EXERCICE 1 **/
 	uint64_t x = store_cr3();
-	printk(7,"test adresse de base %p", x);
+	print_pgt(x,00);
+
+
 
 	load_tasks(mb2);                         /* load the tasks in memory */
 	run_tasks();                                 /* run the loaded tasks */
-
-	printk(7,"\nGoodbye!\n");                                 /* fairewell */
+	printk("\nGoodbye!\n");                                 /* fairewell */
 	die();                        /* the work is done, we can die now... */
 }
