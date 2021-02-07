@@ -27,15 +27,19 @@ void die(void)
  * */
 void print_pgt(paddr_t pml, uint8_t lvl)
 {
-	// la fonction doit être récursive
-	// tant que quoi ?? alors j'appelle print_pgt(paddr_t pml, niveau)
 
-	printk("Test affichage addr %d niveau %d\n", pml, lvl); 
-	/*while (pml < store_cr2())
+	if ( lvl <= 4)
 	{
-		print_pgt(pml, lvl);
-		pml +=1000;
-	}*/
+		print_pgt(pml, lvl+1);
+		printk("Test affichage addr %p niveau %d \n", pml, lvl); 
+		lvl++;
+		pml++;
+	}
+	else 
+	{
+		return;
+	}
+
 }
 
 __attribute__((noreturn))
