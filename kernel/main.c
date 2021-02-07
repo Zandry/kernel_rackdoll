@@ -20,11 +20,22 @@ void die(void)
 		;
 }
 
+/**
+ * @pml adresse d'une zone de mémoire
+ * @lvl niveau de la mémoire
+ * affiche la structure de la table des pages courante. 
+ * */
+void print_pgt(paddr_t pml, uint8_t lvl)
+{
+	// tant que quoi ?? alors j'appelle print_pgt(paddr_t pml, niveau)
+	printk("Test affichage %p", pml);
+}
+
 __attribute__((noreturn))
 void main_multiboot2(void *mb2)
 {
 	clear();                                     /* clear the VGA screen */
-	printk("Rackdoll OS\n-----------\n\n");                 /* greetings */
+	printk(7,"Rackdoll OS\n-----------\n\n");                 /* greetings */
 
 	setup_interrupts();                           /* setup a 64-bits IDT */
 	setup_tss();                                  /* setup a 64-bits TSS */
@@ -34,9 +45,13 @@ void main_multiboot2(void *mb2)
 	disable_pic();                         /* disable anoying legacy PIC */
 	sti();                                          /* enable interrupts */
 
+	/*** EXERCICE 1 **/
+	uint64_t x = store_cr3();
+	printk(7,"test adresse de base %p", x);
+
 	load_tasks(mb2);                         /* load the tasks in memory */
 	run_tasks();                                 /* run the loaded tasks */
 
-	printk("\nGoodbye!\n");                                 /* fairewell */
+	printk(7,"\nGoodbye!\n");                                 /* fairewell */
 	die();                        /* the work is done, we can die now... */
 }
